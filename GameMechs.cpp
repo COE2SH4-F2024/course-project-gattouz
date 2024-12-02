@@ -75,7 +75,9 @@ void GameMechs::setLoseFlag()
 
 void GameMechs::setInput(char this_input)
 {
-    input = this_input;}
+    input = this_input;
+
+}
 
 void GameMechs::clearInput()
 {
