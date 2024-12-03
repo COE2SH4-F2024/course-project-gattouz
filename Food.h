@@ -2,22 +2,25 @@
 #define FOOD_H
 
 #include "objPos.h"
-#include "objPosArrayList.h" // Include this to use objPosArrayList
 #include "GameMechs.h"
 
+// Food class definition
 class Food
 {
+
 private:
-    objPos position;       
-    GameMechs* gameLogic;  // Game mechanics pointer for board size and logic
+    objPos foodPosition;                // Position of the food object
+    GameMechs *gameMechanicsReference;  // Reference to the game mechanics
 
 public:
-    Food(GameMechs* gameMechanics, objPosArrayList* playerPosition);
-    ~Food();
+    Food(GameMechs *gameReference, objPosArrayList *playerPositionList); // Constructor
+    // Destructor omitted as no heap memory is used
 
-    void generateNewPosition(objPosArrayList* restrictedAreas); 
-    bool isCollisionDetected(objPosArrayList* playerPosition) const; // Updated to `const`
-    objPos getFoodPos() const;
+    void generateFood(objPosArrayList *blockedPositions); // Generate a new position for food
+
+    bool checkSelfCollision(objPosArrayList *playerPositionList); // Check if food collides with the player's head
+
+    objPos const getFoodPosition(); // Get the current position of the food object
 };
 
-#endif // FOOD_H
+#endif

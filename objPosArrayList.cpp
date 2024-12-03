@@ -1,158 +1,156 @@
 #include "objPosArrayList.h"
 #include <stdexcept>
-#include <iostream>
 
-// Default Constructor
+// Default constructor: Initializes the array list with default values
 objPosArrayList::objPosArrayList()
-    : listSize(0), arrayCapacity(200), aList(new objPos[200])
 {
-    // Initialize all elements to default values
-    for (int i = 0; i < arrayCapacity; i++)
+    int i;
+    arrayCapacity = ARRAY_MAX_CAP;
+    objList = new objPos[arrayCapacity];
+    listSize = 0;
+
+    for (i = 0; i < arrayCapacity; i++)
     {
-        aList[i].setObjPos(0, 0, 0); // Default values for pos and symbol
+        (*(objList + i)->position).x = 0;
+        (*(objList + i)->position).y = 0;
+        (objList + i)->symbol = 0;
     }
 }
 
-// Copy Constructor
-objPosArrayList::objPosArrayList(const objPosArrayList& other)
-    : listSize(other.listSize), arrayCapacity(other.arrayCapacity), aList(new objPos[other.arrayCapacity])
+// Copy constructor: Creates a copy of another objPosArrayList
+objPosArrayList::objPosArrayList(const objPosArrayList &other)
 {
-    for (int i = 0; i < listSize; i++)
+    int i;
+
+    listSize = other.listSize;
+    arrayCapacity = other.arrayCapacity;
+    objList = new objPos[arrayCapacity];
+
+    for (i = 0; i < listSize; i++)
     {
-        aList[i] = other.aList[i];
+        *(objList + i) = other.objList[i];
     }
 }
 
-// Copy Assignment Operator
-objPosArrayList& objPosArrayList::operator=(const objPosArrayList& other)
+// Copy assignment operator: Assigns values from another objPosArrayList
+objPosArrayList &objPosArrayList::operator=(const objPosArrayList &other)
 {
+    int i;
+
     if (this != &other)
     {
-        delete[] aList; // Clean up existing memory
-
         listSize = other.listSize;
         arrayCapacity = other.arrayCapacity;
-        aList = new objPos[arrayCapacity];
 
-        for (int i = 0; i < listSize; i++)
+        for (i = 0; i < listSize; i++)
         {
-            aList[i] = other.aList[i];
+            objList[i] = other.objList[i];
         }
     }
     return *this;
 }
 
-// Destructor
+// Doubles the size of the array if the list exceeds its capacity
+void objPosArrayList::doubleCapacity()
+{
+    int i;
+
+    arrayCapacity *= 2;
+    objPos *newArray = new objPos[arrayCapacity];
+    for (i = 0; i < listSize; i++)
+    {
+        *(newArray + i) = *(objList + i);
+    }
+    delete[] objList;
+
+    objList = newArray;
+}
+
+// Destructor: Frees the memory allocated for the array
 objPosArrayList::~objPosArrayList()
 {
-    delete[] aList;
-    aList = nullptr;
+    delete[] objList;
 }
 
-// Double the capacity of the array list
-void objPosArrayList::doubleSize()
-{
-    arrayCapacity *= 2;
-    objPos* temp = new objPos[arrayCapacity];
-
-    for (int i = 0; i < listSize; i++)
-    {
-        temp[i] = aList[i];
-    }
-
-    delete[] aList;
-    aList = temp; // Assign new expanded array
-}
-
-// Get the current size of the list
+// Returns the current size of the list
 int objPosArrayList::getSize() const
 {
     return listSize;
 }
 
-// Insert an element at the head of the list
-void objPosArrayList::insertHead(const objPos& thisPos)
+// Inserts a new element at the head of the list
+void objPosArrayList::insertHead(objPos position)
+{
+    int i;
+
+    if (listSize == arrayCapacity)
+    {
+        doubleCapacity();
+    }
+
+    for (i = listSize; i > 0; i--)
+    {
+        *(objList + i) = *(objList + i - 1);
+    }
+    *objList = position;
+
+    listSize++; // Increment size as an element is added
+}
+
+// Inserts a new element at the tail of the list
+void objPosArrayList::insertTail(objPos position)
 {
     if (listSize == arrayCapacity)
     {
-        doubleSize();
+        doubleCapacity();
     }
+    *(objList + listSize) = position;
 
-    for (int i = listSize; i > 0; i--)
-    {
-        aList[i] = aList[i - 1];
-    }
-
-    aList[0] = thisPos;
-    listSize++;
+    listSize++; // Increment size as an element is added
 }
 
-// Insert an element at the tail of the list
-void objPosArrayList::insertTail(const objPos& thisPos)
-{
-    if (listSize == arrayCapacity)
-    {
-        doubleSize();
-    }
-
-    aList[listSize] = thisPos;
-    listSize++;
-}
-
-// Remove the head element from the list
+// Removes the element at the head of the list
 void objPosArrayList::removeHead()
 {
-    if (listSize == 0)
-    {
-        return;
-    }
+    int i;
 
-    for (int i = 0; i < listSize - 1; i++)
+    if (listSize > 0)
     {
-        aList[i] = aList[i + 1];
+        for (i = 0; i < listSize; i++)
+        {
+            *(objList + i) = *(objList + i + 1);
+        }
+        listSize--; // Decrement size as an element is removed
     }
-
-    listSize--;
 }
 
-// Remove the tail element from the list
+// Removes the element at the tail of the list
 void objPosArrayList::removeTail()
 {
     if (listSize > 0)
     {
-        listSize--;
+        listSize--; // Decrement size as an element is removed
     }
 }
 
-// Get the element at the head of the list
+// Returns the element at the head of the list
 objPos objPosArrayList::getHeadElement() const
 {
-    if (listSize == 0)
-    {
-        throw std::out_of_range("List is empty.");
-    }
-
-    return aList[0];
+    return *(objList);
 }
 
-// Get the element at the tail of the list
+// Returns the element at the tail of the list
 objPos objPosArrayList::getTailElement() const
 {
-    if (listSize == 0)
-    {
-        throw std::out_of_range("List is empty.");
-    }
-
-    return aList[listSize - 1];
+    return *(objList + listSize - 1);
 }
 
-// Get an element at a specific index
+// Returns the element at a specified index
 objPos objPosArrayList::getElement(int index) const
 {
     if (index < 0 || index >= listSize)
     {
-        throw std::out_of_range("Index out of range.");
+        throw std::out_of_range("Index out of bounds");
     }
-
-    return aList[index];
+    return *(objList + index); // Return the requested value
 }

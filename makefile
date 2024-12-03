@@ -1,24 +1,26 @@
 CC = g++
-CFLAGS = -I. -g
-OBJ = GameMechs.o objPos.o objPosArrayList.o MacUILib.o Player.o Project.o Food.o # Include Food.o in the object list
+CFLAGS = -I. -g -std=c++11
+OBJ = GameMechs.o objPos.o objPosArrayList.o MacUILib.o Player.o Project.o Food.o
 DEPS = *.h
 EXEC = Project
 
-ifeq (${OS}, Windows_NT)
+# Detect the OS
+ifeq ($(OS),Windows_NT)
     OSSETTING = -DWINDOWS
+    POSTLINKER =  # No need for ncurses on Windows
 else
     OSSETTING = -DPOSIX
-    POSTLINKER = -lncurses
+    POSTLINKER = -lncurses  # Link ncurses for POSIX systems (Linux/MacOS)
 endif
 
-# Rule for compiling .o files from .cpp files
+# Rule to compile .cpp files into .o object files
 %.o: %.cpp $(DEPS)
-	$(CC) ${OSSETTING} -c -o $@ $< $(CFLAGS)
+	$(CC) $(OSSETTING) -c -o $@ $< $(CFLAGS)
 
-# Rule for linking the executable
-${EXEC} : $(OBJ)
-	$(CC) ${OSSETTING} -o $@ $^ $(CFLAGS) ${POSTLINKER}
+# Link the object files into the final executable
+$(EXEC): $(OBJ)
+	$(CC) $(OSSETTING) -o $@ $^ $(CFLAGS) $(POSTLINKER)
 
-# Clean up the compiled files and executable
-clean :
-	rm -f $(OBJ) ${EXEC} ${EXEC}.exe
+# Clean up object files and executable
+clean:
+	rm -f $(OBJ) $(EXEC) $(EXEC).exe

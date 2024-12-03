@@ -1,38 +1,45 @@
 #ifndef OBJPOS_H
 #define OBJPOS_H
 
-struct Pos {
+// Struct to represent a position with x and y coordinates
+typedef struct
+{
     int x;
     int y;
-};
+} Position;
 
-class objPos {
-private:
-    Pos* pos;
-    char symbol;
-
+class objPos
+{
 public:
-    objPos();
-    objPos(int xPos, int yPos, char sym);
-    objPos(const objPos& other);
-    objPos(objPos&& other) noexcept;
-    ~objPos();
+    Position *position; // Pointer to a Position object
+    char symbol;        // Symbol representing the object
 
-    objPos& operator=(const objPos& other);
-    objPos& operator=(objPos&& other) noexcept;
+    objPos();                                  // Default constructor
+    objPos(int xPosition, int yPosition, char sym); // Parameterized constructor
 
-    Pos* getPos() const { return pos; }
-    void setPos(int x, int y);
+    // Respect the rule of six / minimum four
+    // [TODO] Implement the missing special member functions to meet the minimum four rule
 
-    char getSymbol() const;
-    void setSymbol(char sym) { symbol = sym; }
-    void setObjPos(int xPos, int yPos, char sym);
+    ~objPos();                                 // Destructor
 
-    objPos getObjPos() const;  // Declaration for getObjPos
-    bool isPosEqual(const objPos* refPos) const; // Declaration for isPosEqual
-    char getSymbolIfPosEqual(const objPos* refPos) const; // Declaration for getSymbolIfPosEqual
+    objPos(const objPos &reference);           // Copy constructor
+    objPos &operator=(const objPos &reference); // Copy assignment operator
 
-    bool operator==(const objPos& other) const;
+    bool operator==(const objPos &other);      // Equality operator to compare two objPos objects
+
+    void setObjPos(objPos obj);                // Set position using another objPos object
+    void setObjPos(int xPosition, int yPosition, char sym); // Set position using explicit values
+
+    objPos getObjPos() const;                  // Get the current position as an objPos object
+    char getSymbol() const;                    // Retrieve the symbol
+    char getSymbolIfPosEqual(const objPos *referencePosition) const; // Get symbol if position matches
+
+    bool isPosEqual(const objPos *referencePosition) const; // Check if position matches another objPos
+
+    void xPosIncrease();                       // Increment x-coordinate
+    void xPosDecrease();                       // Decrement x-coordinate
+    void yPosIncrease();                       // Increment y-coordinate
+    void yPosDecrease();                       // Decrement y-coordinate
 };
 
-#endif // OBJPOS_H
+#endif

@@ -1,50 +1,65 @@
 #include "Food.h"
-#include <cstdlib> // Use for rand() and srand()
-#include <ctime>   // Use for time()
+#include <time.h>
 
-Food::Food(GameMechs* gameMechanics, objPosArrayList* playerPosition)
-    : gameLogic(gameMechanics)
+// Constructor for the Food class
+Food::Food(GameMechs *gameReference, objPosArrayList *playerPositionList)
 {
-    position.setSymbol('o'); // Use the public setter
-    generateNewPosition(playerPosition);
+    gameMechanicsReference = gameReference; // Reference to the game mechanics
+    foodPosition.symbol = '$';             // Set the symbol for the food object
+    generateFood(playerPositionList);      // Generate food position
 }
 
-Food::~Food()
+// Generates a valid position for the food object
+void Food::generateFood(objPosArrayList *blockedPositions)
 {
-    // No dynamic memory allocation, so no cleanup needed here
-}
+    srand(time(0)); // Seeds the random number generator with the current time
 
-void Food::generateNewPosition(objPosArrayList* restrictedAreas)
-{
-    int xCoordinate, yCoordinate;
-    bool isValidPosition;
+    int index;                 // Iterator variable
+    int foodPositionX, foodPositionY; // Variables to store food position
+    bool isValidPosition = false;     // Flag to check validity of the position
 
-    do
+    // Setting the range for random position generation (inside board boundaries)
+    int xBoundary, yBoundary;
+    xBoundary = gameMechanicsReference->getGameBoardWidth() - 2;
+    yBoundary = gameMechanicsReference->getGameBoardHeight() - 2;
+
+    // Keep generating random positions until a valid one is found
+    while (!isValidPosition)
     {
-        // Generate random coordinates within the game board boundaries
-        xCoordinate = rand() % (gameLogic->getBoardSizeX() - 2) + 1;
-        yCoordinate = rand() % (gameLogic->getBoardSizeY() - 2) + 1;
+        // Generate random food position within board boundaries (not touching borders)
+        foodPositionX = 1 + rand() % xBoundary;
+        foodPositionY = 1 + rand() % yBoundary;
 
+        // Assume the position is valid initially
         isValidPosition = true;
-        for (int i = 0; i < restrictedAreas->getSize(); i++)
+
+        // Check if the generated position overlaps with any blocked area (e.g., snake's body)
+        for (index = 0; index < blockedPositions->getSize(); index++)
         {
-            objPos segment = restrictedAreas->getElement(i);
-            if (xCoordinate == segment.getPos()->x && yCoordinate == segment.getPos()->y) // Use getPos()
+            objPos blockedSegment = blockedPositions->getElement(index);
+
+            // If food position overlaps with any blocked segment, mark it invalid
+            if (foodPositionX == blockedSegment.position->x && foodPositionY == blockedSegment.position->y)
+
             {
-                isValidPosition = false;
-                break;
+                isValidPosition = false; // Mark position as invalid
+                break;                   // Exit the loop early, as we need to generate a new position
             }
         }
-    } while (!isValidPosition);
+    }
 
-    position.setObjPos(xCoordinate, yCoordinate, position.getSymbol()); // Use getSymbol()
+    // Set the valid food position once found
+    this->foodPosition.setObjPos(foodPositionX, foodPositionY, foodPosition.symbol);
 }
 
-objPos Food::getFoodPos() const {
-    return position; // Return the food's position
-}
-
-bool Food::isCollisionDetected(objPosArrayList* playerPosition) const
+// Returns the current position of the food object
+objPos const Food::getFoodPosition()
 {
-    return playerPosition->getElement(0) == position;
+    return foodPosition;
+}
+
+// Checks if the food position collides with the player's head
+bool Food::checkSelfCollision(objPosArrayList *playerPositionList)
+{
+    return playerPositionList->getElement(0) == foodPosition; // Check if head matches the food position
 }

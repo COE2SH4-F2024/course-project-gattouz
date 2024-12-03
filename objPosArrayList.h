@@ -5,33 +5,32 @@
 
 #include "objPos.h"
 
+// objPosArrayList class definition
 class objPosArrayList
 {
 private:
-    objPos* aList;          // Pointer to the dynamic array of objPos
-    int listSize;           // Current size of the list
-    int arrayCapacity;      // Current capacity of the array
-
-    void doubleSize();      // Private method to double the array capacity
+    objPos *objList;       // Pointer to the array of objPos objects
+    int listSize;          // Current size of the list
+    int arrayCapacity;     // Current capacity of the array
 
 public:
-    // Constructors and Destructor
-    objPosArrayList();                             // Default constructor
-    objPosArrayList(const objPosArrayList& other); // Copy constructor
-    objPosArrayList& operator=(const objPosArrayList& other); // Copy assignment operator
-    objPosArrayList(objPosArrayList&& other) noexcept;        // Move constructor
-    objPosArrayList& operator=(objPosArrayList&& other) noexcept; // Move assignment operator
-    ~objPosArrayList();                            // Destructor
+    objPosArrayList();      // Default constructor
+    ~objPosArrayList();     // Destructor to deallocate memory
 
-    // Member Functions
-    int getSize() const;                           // Get the current size of the list
-    void insertHead(const objPos& thisPos);        // Insert an element at the head
-    void insertTail(const objPos& thisPos);        // Insert an element at the tail
-    void removeHead();                             // Remove the head element
-    void removeTail();                             // Remove the tail element
-    objPos getHeadElement() const;                 // Get the head element
-    objPos getTailElement() const;                 // Get the tail element
-    objPos getElement(int index) const;            // Get an element by index
+    int getSize() const;    // Get the current size of the list
+    void insertHead(objPos position);  // Insert a new element at the head of the list
+    void insertTail(objPos position);  // Insert a new element at the tail of the list
+    void removeHead();      // Remove the element at the head of the list
+    void removeTail();      // Remove the element at the tail of the list
+
+    objPos getHeadElement() const; // Get the element at the head of the list
+    objPos getTailElement() const; // Get the element at the tail of the list
+    objPos getElement(int index) const; // Get the element at the specified index
+
+    void doubleCapacity();  // Double the capacity of the array if needed
+
+    objPosArrayList(const objPosArrayList &other);          // Copy constructor
+    objPosArrayList &operator=(const objPosArrayList &other); // Copy assignment operator
 };
 
-#endif // OBJPOS_ARRAYLIST_H
+#endif
