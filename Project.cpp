@@ -8,7 +8,6 @@
 using namespace std;
 
 #define DELAY_CONST 100000
-#define MAX_SPEED_LEVELS 5 // Maximum levels of speed
 
 bool hasWon; // Tracks the winning condition (if the snake is as long as the board)
 
@@ -24,9 +23,6 @@ void CleanUp(void);
 Player *player;
 GameMechs *gameMechanics;
 Food *food;
-
-int speedLevels[MAX_SPEED_LEVELS]; // Array containing different speed levels
-int currentSpeedLevel;            // Current speed level
 
 int main(void)
 {
@@ -52,15 +48,6 @@ void Initialize(void)
     player = new Player(gameMechanics);
     food = new Food(gameMechanics, player->getPlayerPositions());
     hasWon = false;
-
-    currentSpeedLevel = 2; // Start with medium speed
-
-    // Define speed levels
-    speedLevels[0] = 330000;
-    speedLevels[1] = 250000;
-    speedLevels[2] = 100000;
-    speedLevels[3] = 70000;
-    speedLevels[4] = 48000;
 }
 
 void GetInput(void)
@@ -73,16 +60,6 @@ void GetInput(void)
         if (userInput == 27)
         {
             gameMechanics->setExitGameFlag(); // Exit the game when ESC is pressed
-        }
-
-        // Adjust speed level
-        if (userInput == '+' && currentSpeedLevel < MAX_SPEED_LEVELS - 1)
-        {
-            currentSpeedLevel++;
-        }
-        else if (userInput == '-' && currentSpeedLevel > 0)
-        {
-            currentSpeedLevel--;
         }
     }
     else
@@ -108,22 +85,16 @@ void DrawScreen(void)
     MacUILib_clearScreen();
 
     // Print header and instructions
-   MacUILib_printf("Welcome to the Ultimate 2SH4 Snake Challenge - Built in C/C++!\n");
-MacUILib_printf("-------------------------------------------------------------------\n");
-MacUILib_printf("How to Play: Use W, A, S, D to navigate and collect food to grow your snake.\n");
-MacUILib_printf("Tip: The ESC key is your way out if you need to quit the game.\n");
-MacUILib_printf("-------------------------------------------------------------------\n");
+    MacUILib_printf("Welcome to the Ultimate 2SH4 Snake Challenge - Built in C/C++!\n");
+    MacUILib_printf("-------------------------------------------------------------------\n");
+    MacUILib_printf("How to Play: Use W, A, S, D to navigate and collect food to grow your snake.\n");
+    MacUILib_printf("Tip: The ESC key is your way out if you need to quit the game.\n");
+    MacUILib_printf("-------------------------------------------------------------------\n");
 
-if (gameMechanics->getPlayerScore() >= 4)
-{
-    MacUILib_printf("\nCAUTION: Your snake is long enough to collide with itself. Think before you slither!\n\n");
-}
-
-MacUILib_printf("Speed Levels:\n");
-MacUILib_printf("1: Turtle Mode  |  2: Slow & Steady  |  3: Moderate Pace\n");
-MacUILib_printf("4: Lightning Quick  |  5: Hyper Snake!\n\n");
-MacUILib_printf("Current Speed Level: %d (Use '+' to boost, '-' to slow down)\n", currentSpeedLevel + 1);
-MacUILib_printf("-------------------------------------------------------------------\n");
+    if (gameMechanics->getPlayerScore() >= 4)
+    {
+        MacUILib_printf("\nCAUTION: Your snake is long enough to collide with itself. Think before you slither!\n\n");
+    }
 
     // Draw game board
     for (int y = 0; y < gameMechanics->getGameBoardHeight(); y++)
@@ -168,11 +139,11 @@ MacUILib_printf("---------------------------------------------------------------
         MacUILib_printf("\n");
     }
 
-   MacUILib_printf("-------------------------------------------------------------------\n");
-MacUILib_printf("GAME STATS\n");
-MacUILib_printf("-------------------------------------------------------------------\n");
-MacUILib_printf("Food Eaten/Game Score: %d\n", gameMechanics->getPlayerScore());
-MacUILib_printf("Current Snake Length: %d\n", gameMechanics->getPlayerScore() + 1);
+    MacUILib_printf("-------------------------------------------------------------------\n");
+    MacUILib_printf("GAME STATS\n");
+    MacUILib_printf("-------------------------------------------------------------------\n");
+    MacUILib_printf("Food Eaten/Game Score: %d\n", gameMechanics->getPlayerScore());
+    MacUILib_printf("Current Snake Length: %d\n", gameMechanics->getPlayerScore() + 1);
 
     if (gameMechanics->isPlayerLoseFlagSet())
     {
@@ -188,7 +159,7 @@ MacUILib_printf("Current Snake Length: %d\n", gameMechanics->getPlayerScore() + 
 
 void LoopDelay(void)
 {
-    MacUILib_Delay(speedLevels[currentSpeedLevel]);
+    MacUILib_Delay(DELAY_CONST);
 }
 
 void CleanUp(void)
@@ -196,25 +167,25 @@ void CleanUp(void)
     MacUILib_clearScreen();
     MacUILib_Delay(1);
 
-   if (hasWon)
-{
-    MacUILib_printf("VICTORY UNLOCKED! You're officially a Snake Master!\n");
-    MacUILib_printf("Few have conquered this challenge, but you did it with style. Amazing work!\n");
-}
-else if (gameMechanics->isPlayerLoseFlagSet())
-{
-    MacUILib_printf("-------------------------------------------------------------\n");
-    MacUILib_printf("GAME OVER! Alas, you bit yourself. Snakes do that sometimes.\n");
-    MacUILib_printf("But hey, every great gamer learns from their mistakes. Try again soon!\n");
-    MacUILib_printf("-------------------------------------------------------------\n");
-}
-else if (gameMechanics->isExitGameFlagSet())
-{
-    MacUILib_printf("-------------------------------------------------------------\n");
-    MacUILib_printf("EXITING GAME: We hope you had fun slithering around!\n");
-    MacUILib_printf("Thanks for playing. Remember, practice makes perfect—see you next time!\n");
-    MacUILib_printf("-------------------------------------------------------------\n");
-}
+    if (hasWon)
+    {
+        MacUILib_printf("VICTORY UNLOCKED! You're officially a Snake Master!\n");
+        MacUILib_printf("Few have conquered this challenge, but you did it with style. Amazing work!\n");
+    }
+    else if (gameMechanics->isPlayerLoseFlagSet())
+    {
+        MacUILib_printf("-------------------------------------------------------------\n");
+        MacUILib_printf("GAME OVER! Alas, you bit yourself. Snakes do that sometimes.\n");
+        MacUILib_printf("But hey, every great gamer learns from their mistakes. Try again soon!\n");
+        MacUILib_printf("-------------------------------------------------------------\n");
+    }
+    else if (gameMechanics->isExitGameFlagSet())
+    {
+        MacUILib_printf("-------------------------------------------------------------\n");
+        MacUILib_printf("EXITING GAME: We hope you had fun slithering around!\n");
+        MacUILib_printf("Thanks for playing. Remember, practice makes perfect—see you next time!\n");
+        MacUILib_printf("-------------------------------------------------------------\n");
+    }
 
     MacUILib_uninit();
 
