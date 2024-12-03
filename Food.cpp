@@ -5,7 +5,7 @@
 Food::Food(GameMechs* gameMechanics, objPosArrayList* playerPosition)
     : gameLogic(gameMechanics)
 {
-    position.symbol = 'o';
+    position.setSymbol('o'); // Use the public setter
     generateNewPosition(playerPosition);
 }
 
@@ -29,7 +29,7 @@ void Food::generateNewPosition(objPosArrayList* restrictedAreas)
         for (int i = 0; i < restrictedAreas->getSize(); i++)
         {
             objPos segment = restrictedAreas->getElement(i);
-            if (xCoordinate == segment.pos->x && yCoordinate == segment.pos->y)
+            if (xCoordinate == segment.getPos()->x && yCoordinate == segment.getPos()->y) // Use getPos()
             {
                 isValidPosition = false;
                 break;
@@ -37,12 +37,11 @@ void Food::generateNewPosition(objPosArrayList* restrictedAreas)
         }
     } while (!isValidPosition);
 
-    position.setObjPos(xCoordinate, yCoordinate, position.symbol);
+    position.setObjPos(xCoordinate, yCoordinate, position.getSymbol()); // Use getSymbol()
 }
 
-objPos Food::getPosition() const
-{
-    return position;
+objPos Food::getFoodPos() const {
+    return position; // Return the food's position
 }
 
 bool Food::isCollisionDetected(objPosArrayList* playerPosition) const

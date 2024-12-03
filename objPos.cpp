@@ -72,18 +72,15 @@ objPos& objPos::operator=(objPos&& location) noexcept
     return *this;
 }
 
+// Equality operator
+bool objPos::operator==(const objPos& other) const {
+    return pos->x == other.pos->x && pos->y == other.pos->y && symbol == other.symbol;
+}
+
 // Destructor
 objPos::~objPos()
 {
     delete pos; // Free allocated memory
-}
-
-// Set object position using another objPos instance
-void objPos::setObjPos(const objPos& o)
-{
-    pos->x = o.pos->x;
-    pos->y = o.pos->y;
-    symbol = o.symbol;
 }
 
 // Set object position using individual values
@@ -92,12 +89,6 @@ void objPos::setObjPos(int xPos, int yPos, char sym)
     pos->x = xPos;
     pos->y = yPos;
     symbol = sym;
-}
-
-// Get object position (returns a copy)
-objPos objPos::getObjPos() const
-{
-    return objPos(pos->x, pos->y, symbol);
 }
 
 // Get the symbol of the object
@@ -117,3 +108,5 @@ char objPos::getSymbolIfPosEqual(const objPos* refPos) const
 {
     return isPosEqual(refPos) ? symbol : 0;
 }
+
+// Removed conflicting `setObjPos(const objPos&)` and `getObjPos()` 

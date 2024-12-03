@@ -8,30 +8,31 @@ struct Pos {
 
 class objPos {
 private:
-    Pos* pos;      // Pointer to position data
-    char symbol;   // Symbol representing the object
+    Pos* pos;
+    char symbol;
 
 public:
-    // Constructors and Destructor
-    objPos();                                      // Default constructor
-    objPos(int xPos, int yPos, char sym);          // Parameterized constructor
-    objPos(const objPos& other);                  // Copy constructor
-    objPos(objPos&& other) noexcept;              // Move constructor
-    ~objPos();                                     // Destructor
+    objPos();
+    objPos(int xPos, int yPos, char sym);
+    objPos(const objPos& other);
+    objPos(objPos&& other) noexcept;
+    ~objPos();
 
-    // Assignment Operators
-    objPos& operator=(const objPos& other);       // Copy assignment operator
-    objPos& operator=(objPos&& other) noexcept;   // Move assignment operator
+    objPos& operator=(const objPos& other);
+    objPos& operator=(objPos&& other) noexcept;
 
-    // Member Functions
-    void setObjPos(const objPos& other);          // Set position using another objPos
-    void setObjPos(int xPos, int yPos, char sym); // Set position using individual values
+    Pos* getPos() const { return pos; }
+    void setPos(int x, int y);
 
-    objPos getObjPos() const;                     // Get a copy of the position
-    char getSymbol() const;                       // Get the symbol of the object
-    char getSymbolIfPosEqual(const objPos* refPos) const; // Get symbol if positions match
+    char getSymbol() const;
+    void setSymbol(char sym) { symbol = sym; }
+    void setObjPos(int xPos, int yPos, char sym);
 
-    bool isPosEqual(const objPos* refPos) const;  // Check if positions are equal
+    objPos getObjPos() const;  // Declaration for getObjPos
+    bool isPosEqual(const objPos* refPos) const; // Declaration for isPosEqual
+    char getSymbolIfPosEqual(const objPos* refPos) const; // Declaration for getSymbolIfPosEqual
+
+    bool operator==(const objPos& other) const;
 };
 
 #endif // OBJPOS_H

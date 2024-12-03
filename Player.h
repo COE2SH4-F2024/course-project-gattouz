@@ -4,34 +4,25 @@
 #include "GameMechs.h"
 #include "objPos.h"
 #include "objPosArrayList.h"
+#include "Food.h" // Include Food class
 
-class Player
-{
-    // Construct the remaining declaration from the project manual.
+class Player {
+public:
+    enum Dir { UP, DOWN, LEFT, RIGHT, STOP }; // Direction state
 
-    // Only some sample members are included here
+    Player(GameMechs* thisGMRef);
+    ~Player();
 
-    // You will include more data members and member functions to complete your design.
+    objPosArrayList* getPlayerPos() const; 
+    void updatePlayerDir();
+    void movePlayer();
+    bool checkFoodConsumption(Food* foodObj);
+    void increasePlayerLength(Food* foodObj);
 
-    
-    public:
-        enum Dir {UP, DOWN, LEFT, RIGHT, STOP};  // This is the direction state
-
-        Player(GameMechs* thisGMRef);
-        ~Player();
-
-        objPos getPlayerPos() const; // Upgrade this in iteration 3.       
-        void updatePlayerDir();
-        void movePlayer();
-
-        // More methods to be added here
-
-    private:
-        objPos playerPos; // Upgrade this in iteration 3.       
-        enum Dir myDir;
-
-        // Need a reference to the Main Game Mechanisms
-        GameMechs* mainGameMechsRef;
+private:
+    objPosArrayList* playerPos; 
+    Dir myDir;
+    GameMechs* mainGameMechsRef;
 };
 
-#endif
+#endif // PLAYER_H
