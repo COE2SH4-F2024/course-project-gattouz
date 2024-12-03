@@ -3,46 +3,46 @@
 
 #include <cstdlib>
 #include <time.h>
+
 #include "objPos.h"
 #include "objPosArrayList.h"
 
 using namespace std;
 
-// GameMechs class definition
 class GameMechs
 {
-private:
-    char playerInput;             // Stores the player's input
-    bool exitGameFlag;            // Flag to indicate if the game should exit
-    bool playerLoseFlag;          // Flag to indicate if the player has lost
-    int playerScore;              // Tracks the player's score
+    private:
+        char input;
+        bool exitFlag;
+        bool loseFlag;
+        int score;
 
-    int gameBoardWidth;           // Width of the game board
-    int gameBoardHeight;          // Height of the game board
+        int boardSizeX;
+        int boardSizeY;
 
-    objPos foodPosition;          // Position of the food object
+        objPos food;
 
-public:
-    GameMechs();                  // Default constructor
-    GameMechs(int boardWidth, int boardHeight); // Parameterized constructor
+    public:
+        GameMechs();
+        GameMechs(int boardX, int boardY);
+        ~GameMechs(); // is this one needed at all? Why or why not?
+        
+        bool getExitFlagStatus() const; 
+        void setExitTrue();
+        bool getLoseFlagStatus() const;
+        void setLoseFlag();
 
-    // Destructor omitted as no heap memory is used
+        char getInput() const;
+        void setInput(char this_input);
+        void clearInput();
 
-    bool isExitGameFlagSet() const;        // Check if the exit flag is set
-    void setExitGameFlag();                // Set the exit flag to true
-
-    bool isPlayerLoseFlagSet() const;      // Check if the lose flag is set
-    void setPlayerLoseFlag();              // Set the lose flag to true
-
-    char getPlayerInput() const;           // Get the player's input
-    void setPlayerInput(char input);       // Set the player's input
-    void clearPlayerInput();               // Clear the player's input
-
-    int getGameBoardWidth() const;         // Get the width of the game board
-    int getGameBoardHeight() const;        // Get the height of the game board
-
-    int getPlayerScore() const;            // Get the player's score
-    void increasePlayerScore();            // Increment the player's score
+        int getBoardSizeX() const;
+        int getBoardSizeY() const;
+        
+        int getScore() const;
+        void incrementScore();
+        
+        // More methods should be added here
 };
 
 #endif

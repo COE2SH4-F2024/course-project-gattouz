@@ -1,94 +1,84 @@
 #include "GameMechs.h"
 
-// Default constructor for GameMechs
 GameMechs::GameMechs()
 {
-    // Initializing the game variables
-    playerInput = 0;
-    exitGameFlag = false;
-    playerLoseFlag = false;
-    playerScore = 0;
-
-    // Setting the default board size
-    gameBoardWidth = 30;
-    gameBoardHeight = 15;
+    boardSizeX = 30;
+    boardSizeY = 15; 
+    input = 0; 
+    exitFlag = false;
+    loseFlag = false;
+    score = 0;
 }
 
-// Parameterized constructor for GameMechs
-GameMechs::GameMechs(int boardWidth, int boardHeight)
+GameMechs::GameMechs(int boardX, int boardY)
 {
-    playerInput = 0;
-    exitGameFlag = false;
-    playerLoseFlag = false;
-    playerScore = 0;
-
-    // Setting different sizes for the board
-    gameBoardWidth = boardWidth;
-    gameBoardHeight = boardHeight;
+    boardSizeX = boardX;
+    boardSizeY = boardY; 
+    input = 0; 
+    exitFlag = false;
+    loseFlag = false;
+    score = 0;
 }
 
-// Check if the exit flag is set
-bool GameMechs::isExitGameFlagSet() const
+// do you need a destructor?
+GameMechs::~GameMechs()
 {
-    return exitGameFlag;
+    
 }
 
-// Check if the lose flag is set
-bool GameMechs::isPlayerLoseFlagSet() const
+bool GameMechs::getExitFlagStatus() const
 {
-    return playerLoseFlag;
+    return exitFlag;
 }
 
-// Get the player's input
-char GameMechs::getPlayerInput() const
+bool GameMechs::getLoseFlagStatus() const
 {
-    return playerInput;
+    return loseFlag;
+}
+    
+
+char GameMechs::getInput() const
+{
+    return input;
 }
 
-// Get the player's score
-int GameMechs::getPlayerScore() const
+int GameMechs::getScore() const
 {
-    return playerScore;
+    return score;
 }
 
-// Increment the player's score
-void GameMechs::increasePlayerScore()
+void GameMechs::incrementScore()
 {
-    playerScore++;
+    score++;
 }
 
-// Get the width of the game board
-int GameMechs::getGameBoardWidth() const
+int GameMechs::getBoardSizeX() const
 {
-    return gameBoardWidth;
+    return boardSizeX;
 }
 
-// Get the height of the game board
-int GameMechs::getGameBoardHeight() const
+int GameMechs::getBoardSizeY() const
 {
-    return gameBoardHeight;
+    return boardSizeY;
 }
 
-// Set the exit flag to true
-void GameMechs::setExitGameFlag()
+
+void GameMechs::setExitTrue()
 {
-    exitGameFlag = true;
+    exitFlag = true;
 }
 
-// Set the lose flag to true
-void GameMechs::setPlayerLoseFlag()
+void GameMechs::setLoseFlag()
 {
-    playerLoseFlag = true;
+    loseFlag = true;
 }
 
-// Set the player's input
-void GameMechs::setPlayerInput(char input)
+void GameMechs::setInput(char this_input)
 {
-    playerInput = input; // Setting the input with what the user entered
+    input = this_input;}
+
+void GameMechs::clearInput()
+{
+    input = 0;
 }
 
-// Clear the player's input
-void GameMechs::clearPlayerInput()
-{
-    playerInput = 0;
-}

@@ -21,14 +21,14 @@ void CleanUp(void);
 
 // Game objects
 Player *player;
-GameMechs *gameMechanics;
+GameMechs *gameMechsRef;
 Food *food;
 
 int main(void)
 {
     Initialize();
 
-    while (!gameMechanics->isExitGameFlagSet())
+    while (!gameMechsRef->getExitFlagStatus())
     {
         GetInput();
         RunLogic();
@@ -44,9 +44,9 @@ void Initialize(void)
     MacUILib_init();
     MacUILib_clearScreen();
 
-    gameMechanics = new GameMechs(30, 15);
-    player = new Player(gameMechanics);
-    food = new Food(gameMechanics, player->getPlayerPositions());
+    gameMechsRef = new GameMechs(30, 15);
+    player = new Player(gameMechsRef);
+    food = new Food(gameMechsRef, player->getPlayerPos());
     hasWon = false;
 }
 
@@ -55,27 +55,27 @@ void GetInput(void)
     if (MacUILib_hasChar())
     {
         char userInput = MacUILib_getChar();
-        gameMechanics->setPlayerInput(userInput);
+        gameMechsRef->setInput(userInput);
 
         if (userInput == 27)
         {
-            gameMechanics->setExitGameFlag(); // Exit the game when ESC is pressed
+            gameMechsRef->setExitTrue(); // Exit the game when ESC is pressed
         }
     }
     else
     {
-        gameMechanics->setPlayerInput(0); // No input
+        gameMechsRef->clearInput(); // No input
     }
 }
 
 void RunLogic(void)
 {
-    player->updatePlayerDirection();
+    player->updatePlayerDir();
     player->movePlayer();
 
     if (player->checkFoodConsumption(food))
     {
-        food->generateFood(player->getPlayerPositions());
+        food->generateFood(player->getPlayerPos());
         player->increasePlayerLength(food);
     }
 }
@@ -91,18 +91,18 @@ void DrawScreen(void)
     MacUILib_printf("Tip: The ESC key is your way out if you need to quit the game.\n");
     MacUILib_printf("-------------------------------------------------------------------\n");
 
-    if (gameMechanics->getPlayerScore() >= 4)
+    if (gameMechsRef->getScore() >= 4)
     {
         MacUILib_printf("\nCAUTION: Your snake is long enough to collide with itself. Think before you slither!\n\n");
     }
 
     // Draw game board
-    for (int y = 0; y < gameMechanics->getGameBoardHeight(); y++)
+    for (int y = 0; y < gameMechsRef->getBoardSizeY(); y++)
     {
-        for (int x = 0; x < gameMechanics->getGameBoardWidth(); x++)
+        for (int x = 0; x < gameMechsRef->getBoardSizeX(); x++)
         {
             // Draw borders
-            if (x == 0 || x == gameMechanics->getGameBoardWidth() - 1 || y == 0 || y == gameMechanics->getGameBoardHeight() - 1)
+            if (x == 0 || x == gameMechsRef->getBoardSizeX() - 1 || y == 0 || y == gameMechsRef->getBoardSizeY() - 1)
             {
                 MacUILib_printf("#");
             }
@@ -111,9 +111,9 @@ void DrawScreen(void)
                 bool isOccupied = false;
 
                 // Check if cell is part of the snake
-                for (int i = 0; i < player->getPlayerPositions()->getSize(); i++)
+                for (int i = 0; i < player->getPlayerPos()->getSize(); i++)
                 {
-                    objPos segment = player->getPlayerPositions()->getElement(i);
+                    objPos segment = player->getPlayerPos()->getElement(i);
                     if (x == segment.position->x && y == segment.position->y)
                     {
                         MacUILib_printf("%c", segment.symbol);
@@ -125,9 +125,9 @@ void DrawScreen(void)
                 // Check if cell contains food
                 if (!isOccupied)
                 {
-                    if (x == food->getFoodPosition().position->x && y == food->getFoodPosition().position->y)
+                    if (x == food->getFoodPos().position->x && y == food->getFoodPos().position->y)
                     {
-                        MacUILib_printf("%c", food->getFoodPosition().symbol);
+                        MacUILib_printf("%c", food->getFoodPos().symbol);
                     }
                     else
                     {
@@ -142,18 +142,18 @@ void DrawScreen(void)
     MacUILib_printf("-------------------------------------------------------------------\n");
     MacUILib_printf("GAME STATS\n");
     MacUILib_printf("-------------------------------------------------------------------\n");
-    MacUILib_printf("Food Eaten/Game Score: %d\n", gameMechanics->getPlayerScore());
-    MacUILib_printf("Current Snake Length: %d\n", gameMechanics->getPlayerScore() + 1);
+    MacUILib_printf("Food Eaten/Game Score: %d\n", gameMechsRef->getScore());
+    MacUILib_printf("Current Snake Length: %d\n", gameMechsRef->getScore() + 1);
 
-    if (gameMechanics->isPlayerLoseFlagSet())
+    if (gameMechsRef->getLoseFlagStatus())
     {
-        gameMechanics->setExitGameFlag();
+        gameMechsRef->setExitTrue();
     }
 
-    if ((gameMechanics->getPlayerScore() + 1) >= 364) // Winning condition
+    if ((gameMechsRef->getScore() + 1) >= 364) // Winning condition
     {
         hasWon = true;
-        gameMechanics->setExitGameFlag();
+        gameMechsRef->setExitTrue();
     }
 }
 
@@ -172,14 +172,14 @@ void CleanUp(void)
         MacUILib_printf("VICTORY UNLOCKED! You're officially a Snake Master!\n");
         MacUILib_printf("Few have conquered this challenge, but you did it with style. Amazing work!\n");
     }
-    else if (gameMechanics->isPlayerLoseFlagSet())
+    else if (gameMechsRef->getLoseFlagStatus())
     {
         MacUILib_printf("-------------------------------------------------------------\n");
         MacUILib_printf("GAME OVER! Alas, you bit yourself. Snakes do that sometimes.\n");
         MacUILib_printf("But hey, every great gamer learns from their mistakes. Try again soon!\n");
         MacUILib_printf("-------------------------------------------------------------\n");
     }
-    else if (gameMechanics->isExitGameFlagSet())
+    else if (gameMechsRef->getExitFlagStatus())
     {
         MacUILib_printf("-------------------------------------------------------------\n");
         MacUILib_printf("EXITING GAME: We hope you had fun slithering around!\n");
@@ -191,6 +191,6 @@ void CleanUp(void)
 
     // Deallocate memory
     delete player;
-    delete gameMechanics;
+    delete gameMechsRef;
     delete food;
 }

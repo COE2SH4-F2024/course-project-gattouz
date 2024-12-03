@@ -22,11 +22,11 @@ public:
         STOP
     }; // Enum representing player's direction state
 
-    Player(GameMechs *gameMechanicsReference); // Constructor
-    ~Player();                                 // Destructor
+    Player(GameMechs *gameMechsRef); // Constructor
+    ~Player();                       // Destructor
 
-    objPosArrayList *getPlayerPositions() const; // Get player's positions
-    void updatePlayerDirection();               // Update the player's direction based on input
+    objPosArrayList *getPlayerPos() const; // Get player's positions
+    void updatePlayerDir();               // Update the player's direction based on input
 
     void movePlayer(); // Move the player
 
@@ -34,10 +34,10 @@ public:
     void increasePlayerLength(Food *foodItem);  // Increase the player's length after consuming food
 
 private:
-    objPosArrayList *playerPositionList; // Stores the player's positions
-    enum Direction currentDirection;     // Current direction of the player
+    objPosArrayList *playerPosList; // Stores the player's positions
+    enum Direction currentDir;      // Current direction of the player
 
-    GameMechs *mainGameMechsRef; // Reference to the main game mechanics
+    GameMechs *gameMechsRef; // Reference to the main game mechanics
 };
 
 #endif
