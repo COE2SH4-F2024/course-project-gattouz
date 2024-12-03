@@ -27,7 +27,6 @@ public:
     objPos getTailElement() const; // Get the element at the tail of the list
     objPos getElement(int index) const; // Get the element at the specified index
 
-    void doubleCapacity();  // Double the capacity of the array if needed
 
     objPosArrayList(const objPosArrayList &other);          // Copy constructor
     objPosArrayList &operator=(const objPosArrayList &other); // Copy assignment operator

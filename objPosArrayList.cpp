@@ -50,22 +50,6 @@ objPosArrayList &objPosArrayList::operator=(const objPosArrayList &other)
     return *this;
 }
 
-// Doubles the size of the array if the list exceeds its capacity
-void objPosArrayList::doubleCapacity()
-{
-    int i;
-
-    arrayCapacity *= 2;
-    objPos *newArray = new objPos[arrayCapacity];
-    for (i = 0; i < listSize; i++)
-    {
-        *(newArray + i) = *(objList + i);
-    }
-    delete[] objList;
-
-    objList = newArray;
-}
-
 // Destructor: Frees the memory allocated for the array
 objPosArrayList::~objPosArrayList()
 {
@@ -81,14 +65,12 @@ int objPosArrayList::getSize() const
 // Inserts a new element at the head of the list
 void objPosArrayList::insertHead(objPos position)
 {
-    int i;
-
     if (listSize == arrayCapacity)
     {
-        doubleCapacity();
+        throw std::overflow_error("List capacity exceeded. Cannot insert new element at the head.");
     }
 
-    for (i = listSize; i > 0; i--)
+    for (int i = listSize; i > 0; i--)
     {
         *(objList + i) = *(objList + i - 1);
     }
@@ -102,21 +84,19 @@ void objPosArrayList::insertTail(objPos position)
 {
     if (listSize == arrayCapacity)
     {
-        doubleCapacity();
+        throw std::overflow_error("List capacity exceeded. Cannot insert new element at the tail.");
     }
-    *(objList + listSize) = position;
 
+    *(objList + listSize) = position;
     listSize++; // Increment size as an element is added
 }
 
 // Removes the element at the head of the list
 void objPosArrayList::removeHead()
 {
-    int i;
-
     if (listSize > 0)
     {
-        for (i = 0; i < listSize; i++)
+        for (int i = 0; i < listSize; i++)
         {
             *(objList + i) = *(objList + i + 1);
         }
