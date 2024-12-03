@@ -108,21 +108,22 @@ void DrawScreen(void)
     MacUILib_clearScreen();
 
     // Print header and instructions
-    MacUILib_printf("2SH4 Snake Game: Built Using C/C++!\n");
-    MacUILib_printf("-------------------------------------------------------------------\n");
-    MacUILib_printf("Instructions: Use W, A, S, D to move, collect food items to grow.\n");
-    MacUILib_printf("DO NOT COLLIDE WITH YOURSELF. Press ESC key to exit.\n");
-    MacUILib_printf("-------------------------------------------------------------------\n");
+   MacUILib_printf("Welcome to the Ultimate 2SH4 Snake Challenge - Built in C/C++!\n");
+MacUILib_printf("-------------------------------------------------------------------\n");
+MacUILib_printf("How to Play: Use W, A, S, D to navigate and collect food to grow your snake.\n");
+MacUILib_printf("Tip: The ESC key is your way out if you need to quit the game.\n");
+MacUILib_printf("-------------------------------------------------------------------\n");
 
-    // Display warning if snake can collide with itself
-    if (gameMechanics->getPlayerScore() >= 4)
-    {
-        MacUILib_printf("\nWARNING: Your snake can collide with itself. Move wisely.\n\n");
-    }
+if (gameMechanics->getPlayerScore() >= 4)
+{
+    MacUILib_printf("\nCAUTION: Your snake is long enough to collide with itself. Think before you slither!\n\n");
+}
 
-    MacUILib_printf("1: Turtle Speed,   2: Slow,   3: Medium,   4: Fast,   5: Fastest\n\n");
-    MacUILib_printf("Speed Level: %d (Press '+' to increase, '-' to decrease)\n", currentSpeedLevel + 1);
-    MacUILib_printf("-------------------------------------------------------------------\n");
+MacUILib_printf("Speed Levels:\n");
+MacUILib_printf("1: Turtle Mode  |  2: Slow & Steady  |  3: Moderate Pace\n");
+MacUILib_printf("4: Lightning Quick  |  5: Hyper Snake!\n\n");
+MacUILib_printf("Current Speed Level: %d (Use '+' to boost, '-' to slow down)\n", currentSpeedLevel + 1);
+MacUILib_printf("-------------------------------------------------------------------\n");
 
     // Draw game board
     for (int y = 0; y < gameMechanics->getGameBoardHeight(); y++)
